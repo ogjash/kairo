@@ -2,13 +2,18 @@
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod"; 
-import { zodResolver } from '@hookform/resolvers/zod'; 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from "sonner"; 
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { AuthCard } from "./auth-card";
+
+import { authClient } from "@/lib/auth/auth-client";
+import { useRouter } from "next/navigation";
+
 
 const schema = z.object({
   email: z.string().email(),
@@ -19,6 +24,8 @@ type FormFields = z.infer<typeof schema>;
 
 export function SignInForm() {
 
+  const router = useRouter();
+
   const { 
     register,
     handleSubmit, 
@@ -28,8 +35,21 @@ export function SignInForm() {
   });
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    console.log(data);
-  }
+    const { error } =
+      await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+      });
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    toast.success("Signed in successfully");
+
+    router.push("/dashboard");
+  };
 
   return (
     <AuthCard
@@ -46,7 +66,6 @@ export function SignInForm() {
             <Label htmlFor="email">Email</Label>
             <Input
               {...register("email")}
-              id="email"
               type="email"
               placeholder="your@email.com"
               className="p-5"
@@ -65,7 +84,6 @@ export function SignInForm() {
             </div>
             <Input 
               {...register("password")}
-              id="password" 
               type="password"
               placeholder="Must have at least 8 characters"
               className="p-5"

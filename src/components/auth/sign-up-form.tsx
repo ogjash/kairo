@@ -1,11 +1,63 @@
 "use client";
 
+import { z } from "zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthCard } from "./auth-card";
 
+import { authClient } from "@/lib/auth/auth-client";
+import { useRouter } from "next/navigation";
+
+const schema = z
+  .object({
+    name: z.string().min(1),
+    email: z.string().email(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
+
+type FormFields = z.infer<typeof schema>;
+
+
 export function SignUpForm() {
+
+  const router = useRouter();
+
+  const { 
+      register,
+      handleSubmit, 
+      formState: { errors, isSubmitting } 
+    } = useForm<FormFields>({
+      resolver: zodResolver(schema)
+    });
+
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    const { error } =
+      await authClient.signUp.email({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    toast.success("Account created");
+
+    router.push("/dashboard");
+  };
+
   return (
     <AuthCard
       title="Welcome to Kairo"
@@ -15,49 +67,49 @@ export function SignUpForm() {
       footerLinkText="Sign in"
       oauthText="Sign up"
     >
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>
             <Input
-              id="name"
+              {...register("name")}
               type="text"
               placeholder="John Doe"
               className="p-5"
-              required
             />
+            {errors.name && <div className="text-red-400">{errors.name.message}</div>}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
-              id="email"
+              {...register("email")}
               type="email"
               placeholder="your@email.com"
               className="p-5"
-              required
             />
+            {errors.email && <div className="text-red-400">{errors.email.message}</div>}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
             <Input 
-              id="password" 
+              {...register("password")}
               type="password"
               className="p-5"
-              required 
             />
+            {errors.password && <div className="text-red-400">{errors.password.message}</div>}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="confirm-password">Confirm Password</Label>
             <Input 
-              id="confirm-password" 
+              {...register("confirmPassword")} 
               type="password"
               className="p-5"
-              required 
             />
+            {errors.confirmPassword && <div className="text-red-400">{errors.confirmPassword.message}</div>}
           </div>
           <div className="w-full flex items-center justify-center pt-2">
-            <Button type="submit" className="w-full p-6 text-lg">
-              Sign Up
+            <Button type="submit" className="w-full p-6 text-lg bg-[#71B2FF] hover:bg-[#5b8ac6] disabled:bg-[#43618b]">
+              {isSubmitting ? "Signing up..." : "Sign Up"}
             </Button>
           </div>
         </div>
