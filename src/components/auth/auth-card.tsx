@@ -30,7 +30,7 @@ export function AuthCard({
   description,
   children,
   footerText,
-  footerLink,
+  footerLink, 
   footerLinkText,
   oauthText,
 }: AuthCardProps) {
