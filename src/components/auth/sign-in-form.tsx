@@ -68,7 +68,7 @@ export function SignInForm() {
               {...register("email")}
               type="email"
               placeholder="your@email.com"
-              className="p-5"
+              className="p-5 focus-visible:ring-0 focus-visible:border-blue-500"
             />
             {errors.email && <div className="text-red-400">{errors.email.message}</div>}
           </div>
@@ -86,7 +86,7 @@ export function SignInForm() {
               {...register("password")}
               type="password"
               placeholder="Must have at least 8 characters"
-              className="p-5"
+              className="p-5 focus-visible:ring-0 focus-visible:border-blue-500"
             />
             {errors.password && <div className="text-red-400">{errors.password.message}</div>}
           </div>

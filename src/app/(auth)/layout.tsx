@@ -1,6 +1,5 @@
 import Background from "@/components/auth/background";
 
-
 interface Props {
   children: React.ReactNode;
 };
