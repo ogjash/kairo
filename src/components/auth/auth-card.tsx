@@ -6,6 +6,16 @@ import { FaGithub } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+import { createAuthClient } from "better-auth/client"
+const authClient =  createAuthClient()
+
+const signIn = async (provider: "github" | "google") => {
+  const data = await authClient.signIn.social({
+    provider,
+  })
+  return data
+}
+
 interface AuthCardProps {
   title: string;
   description: string;
@@ -39,11 +49,11 @@ export function AuthCard({
         <span className="flex items-center justify-center text-muted-foreground my-6">or</span>
         
         <div className="flex flex-col gap-2">
-          <Button type="button" className="w-full bg-transparent border border-border text-foreground p-5">
+          <Button type="button" onClick={() => signIn("google")} className="w-full bg-transparent border border-border text-foreground p-5">
             <FcGoogle className="size-6"/>
             {oauthText} with Google
           </Button>
-          <Button type="button" className="w-full bg-transparent border-border text-foreground p-5">
+          <Button type="button" onClick={() => signIn("github")} className="w-full bg-transparent border-border text-foreground p-5">
             <FaGithub className="size-6"/>
             {oauthText} with Github
           </Button>
