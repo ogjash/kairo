@@ -6,7 +6,7 @@ import {
   integer,
 } from "drizzle-orm/pg-core";
 
-import { subjects } from "./subjects";
+import { notebooks } from "./notebooks";
 
 export const documents = pgTable("documents", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -15,7 +15,7 @@ export const documents = pgTable("documents", {
   fileType: text("file_type").notNull(),
   fileSize: integer("file_size"),
   subjectId: uuid("subject_id")
-    .references(() => subjects.id, {
+    .references(() => notebooks.id, {
       onDelete: "cascade",
     })
     .notNull(),

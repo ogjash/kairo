@@ -5,13 +5,13 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
-import { subjects } from "./subjects";
+import { notebooks } from "./notebooks";
 
 export const chats = pgTable("chats", {
   id: uuid("id").defaultRandom().primaryKey(),
   title: text("title"),
   subjectId: uuid("subject_id")
-    .references(() => subjects.id, {
+    .references(() => notebooks.id, {
       onDelete: "cascade",
     })
     .notNull(),

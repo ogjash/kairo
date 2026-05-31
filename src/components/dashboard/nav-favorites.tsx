@@ -31,7 +31,7 @@ export function NavFavorites({
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Favorites</SidebarGroupLabel>
+      <SidebarGroupLabel>Starred</SidebarGroupLabel>
       <SidebarMenu>
         {favorites.map((item) => (
           <SidebarMenuItem key={item.name}>
@@ -59,7 +59,7 @@ export function NavFavorites({
               >
                 <DropdownMenuItem>
                   <StarOffIcon className="text-muted-foreground" />
-                  <span>Remove from Favorites</span>
+                  <span>Unstar</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>

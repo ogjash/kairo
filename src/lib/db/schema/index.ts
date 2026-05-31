@@ -1,6 +1,7 @@
 // App Schema
+export * from "./spaces";
 export * from "./workspaces";
-export * from "./subjects";
+export * from "./notebooks";
 export * from "./documents";
 export * from "./document-chunks";
 export * from "./chats";

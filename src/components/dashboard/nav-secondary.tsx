@@ -13,6 +13,7 @@ import {
 
 export function NavSecondary({
   items,
+  className,
   ...props
 }: {
   items: {
@@ -23,7 +24,7 @@ export function NavSecondary({
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
-    <SidebarGroup {...props}>
+    <SidebarGroup className={`p-0 ${className || ""}`} {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
@@ -34,7 +35,6 @@ export function NavSecondary({
                   <span>{item.title}</span>
                 </a>
               </SidebarMenuButton>
-              {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

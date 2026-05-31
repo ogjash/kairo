@@ -1,98 +1,81 @@
-"use client"
-
 import * as React from "react"
 
 import { NavFavorites } from "@/components/dashboard/nav-favorites"
 import { NavMain } from "@/components/dashboard/nav-main"
 import { NavSecondary } from "@/components/dashboard/nav-secondary"
 import { NavWorkspaces } from "@/components/dashboard/nav-workspaces"
-import { TeamSwitcher } from "@/components/dashboard/team-switcher"
+import { SpaceSwitcher } from "@/components/dashboard/space-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarRail,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"
-import {  SearchIcon, SparklesIcon, HomeIcon, InboxIcon, CalendarIcon, Settings2Icon, BlocksIcon, Trash2Icon, MessageCircleQuestionIcon } from "lucide-react"
 
-// This is sample data.
+import { BsPersonWorkspace, BsCalendar3 } from "react-icons/bs";
+import { MdTaskAlt } from "react-icons/md";
+import { PiClockCounterClockwiseBold } from "react-icons/pi";
+import { RiUserSharedLine } from "react-icons/ri";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { IoMdCloudOutline } from "react-icons/io";
+
+
+
+import { auth } from "@/lib/auth/auth";
+import { headers } from "next/headers";
+import { getUserSpaces } from "@/lib/dashboard/space-actions";
+
 const data = {
   navMain: [
     {
-      title: "Search",
-      url: "#",
+      title: "All Workspace",
+      url: "/dashboard/all",
       icon: (
-        <SearchIcon
-        />
+        <BsPersonWorkspace />
       ),
     },
     {
-      title: "Ask AI",
-      url: "#",
+      title: "Recently Visited",
+      url: "/dashboard/recent",
       icon: (
-        <SparklesIcon
-        />
+        <PiClockCounterClockwiseBold />
       ),
     },
     {
-      title: "Home",
-      url: "#",
+      title: "Tasks",
+      url: "/dashboard/tasks",
       icon: (
-        <HomeIcon
-        />
+        <MdTaskAlt />
       ),
-      isActive: true,
     },
     {
-      title: "Inbox",
-      url: "#",
+      title: "Calendar",
+      url: "/dashboard/calendar",
       icon: (
-        <InboxIcon
-        />
+        <BsCalendar3 />
       ),
-      badge: "10",
     },
   ],
   navSecondary: [
     {
-      title: "Calendar",
-      url: "#",
+      title: "Imagine",
+      url: "/dashboard/imagine",
       icon: (
-        <CalendarIcon
-        />
+        <IoMdCloudOutline />
       ),
     },
     {
-      title: "Settings",
-      url: "#",
+      title: "Shared with Me",
+      url: "/dashboard/shared-with-me",
       icon: (
-        <Settings2Icon
-        />
-      ),
-    },
-    {
-      title: "Templates",
-      url: "#",
-      icon: (
-        <BlocksIcon
-        />
+        <RiUserSharedLine />
       ),
     },
     {
       title: "Trash",
-      url: "#",
+      url: "/dashboard/trash",
       icon: (
-        <Trash2Icon
-        />
-      ),
-    },
-    {
-      title: "Help",
-      url: "#",
-      icon: (
-        <MessageCircleQuestionIcon
-        />
+        <FaRegTrashAlt />
       ),
     },
   ],
@@ -257,17 +240,23 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  const spaces = session?.user ? await getUserSpaces(session.user.id) : [];
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <TeamSwitcher />
+        <SpaceSwitcher spaces={spaces} />
         <NavMain items={data.navMain} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarHeader>
       <SidebarContent>
         <NavFavorites favorites={data.favorites} />
         <NavWorkspaces workspaces={data.workspaces} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

@@ -1,9 +1,75 @@
 {
-  "id": "94add473-8d38-4f32-ae05-617e826a749c",
+  "id": "7ab444fc-dd01-4c17-8952-75a152dc4ca8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.spaces": {
+      "name": "spaces",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_default": {
+          "name": "is_default",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "spaces_owner_id_user_id_fk": {
+          "name": "spaces_owner_id_user_id_fk",
+          "tableFrom": "spaces",
+          "tableTo": "user",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.workspaces": {
       "name": "workspaces",
       "schema": "",
@@ -29,6 +95,12 @@
         },
         "owner_id": {
           "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "space_id": {
+          "name": "space_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -55,6 +127,19 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "workspaces_space_id_spaces_id_fk": {
+          "name": "workspaces_space_id_spaces_id_fk",
+          "tableFrom": "workspaces",
+          "tableTo": "spaces",
+          "columnsFrom": [
+            "space_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -63,8 +148,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.subjects": {
-      "name": "subjects",
+    "public.notebooks": {
+      "name": "notebooks",
       "schema": "",
       "columns": {
         "id": {
@@ -92,6 +177,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "is_starred": {
+          "name": "is_starred",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -102,9 +194,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "subjects_workspace_id_workspaces_id_fk": {
-          "name": "subjects_workspace_id_workspaces_id_fk",
-          "tableFrom": "subjects",
+        "notebooks_workspace_id_workspaces_id_fk": {
+          "name": "notebooks_workspace_id_workspaces_id_fk",
+          "tableFrom": "notebooks",
           "tableTo": "workspaces",
           "columnsFrom": [
             "workspace_id"
@@ -173,10 +265,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "documents_subject_id_subjects_id_fk": {
-          "name": "documents_subject_id_subjects_id_fk",
+        "documents_subject_id_notebooks_id_fk": {
+          "name": "documents_subject_id_notebooks_id_fk",
           "tableFrom": "documents",
-          "tableTo": "subjects",
+          "tableTo": "notebooks",
           "columnsFrom": [
             "subject_id"
           ],
@@ -284,10 +376,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "chats_subject_id_subjects_id_fk": {
-          "name": "chats_subject_id_subjects_id_fk",
+        "chats_subject_id_notebooks_id_fk": {
+          "name": "chats_subject_id_notebooks_id_fk",
           "tableFrom": "chats",
-          "tableTo": "subjects",
+          "tableTo": "notebooks",
           "columnsFrom": [
             "subject_id"
           ],
