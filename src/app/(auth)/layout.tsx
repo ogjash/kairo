@@ -4,7 +4,7 @@ interface Props {
   children: React.ReactNode;
 };
 
-const Layout = ({ children }: Props) => {
+const AuthLayout = ({ children }: Props) => {
   return ( 
     <div className="relative isolate min-h-screen overflow-hidden">
       <Background />
@@ -16,4 +16,4 @@ const Layout = ({ children }: Props) => {
   );
 };
  
-export default Layout;
+export default AuthLayout;

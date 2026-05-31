@@ -1,14 +1,13 @@
 "use client"
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
+import { authClient } from "@/lib/auth/auth-client"
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -16,21 +15,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { ChevronDownIcon, PlusIcon } from "lucide-react"
+import { ChevronDownIcon, Cog, LogOut } from "lucide-react"
 
-export function TeamSwitcher({
-  teams,
-}: {
-  teams: {
-    name: string
-    logo: React.ReactNode
-    plan: string
-  }[]
-}) {
-  const [activeTeam, setActiveTeam] = React.useState(teams[0])
+import Avatar from "boring-avatars";
 
-  if (!activeTeam) {
-    return null
+export function TeamSwitcher() {
+  const router = useRouter()
+
+
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/sign-in");
+        },
+      },
+    });
   }
 
   return (
@@ -38,11 +38,11 @@ export function TeamSwitcher({
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton className="w-fit px-1.5">
-              <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-                {activeTeam.logo}
+            <SidebarMenuButton className="w-fit px-1.5 cursor-pointer">
+              <div className="flex items-center justify-center overflow-hidden rounded-sm">
+                <Avatar name="Juliette Gordon" colors={["#0a0310", "#49007e", "#ff005b", "#ff7d10", "#ffb238"]} variant="marble"  square size={80}/>
               </div>
-              <span className="truncate font-medium">{activeTeam.name}</span>
+              <span className="truncate font-medium">My Space</span>
               <ChevronDownIcon className="opacity-50" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -52,28 +52,17 @@ export function TeamSwitcher({
             side="bottom"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Teams
-            </DropdownMenuLabel>
-            {teams.map((team, index) => (
-              <DropdownMenuItem
-                key={team.name}
-                onClick={() => setActiveTeam(team)}
-                className="gap-2 p-2"
-              >
-                <div className="flex size-6 items-center justify-center rounded-xs border">
-                  {team.logo}
-                </div>
-                {team.name}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <PlusIcon className="size-4" />
-              </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
+            <DropdownMenuItem className="gap-2 p-2 cursor-pointer">
+              <Cog className="text-sidebar-foreground/50"/>
+              Settings
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem 
+              className="gap-2 p-2 cursor-pointer" 
+              onClick={handleSignOut}
+            >
+              <LogOut className="text-sidebar-foreground/50"/>
+              Sign Out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
