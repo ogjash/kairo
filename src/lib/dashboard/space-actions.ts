@@ -9,12 +9,14 @@ export async function createSpaceWithAvatar(userId: string, spaceName: string, i
   const newSpaceId = uuidv4();
 
   try {
+    // Just create the space in the database without relying on Cloudinary
+    // The frontend will generate the avatar using boring-avatars
     const [newSpace] = await db.insert(spaces).values({
       id: newSpaceId,
       name: spaceName,
       ownerId: userId,
       isDefault: isDefault,
-      avatarUrl: null,
+      avatarUrl: null, // Let frontend generate avatar
     }).returning();
 
     console.log("Space created successfully:", newSpace);

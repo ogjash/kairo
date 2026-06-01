@@ -8,6 +8,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -15,7 +16,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { ChevronDownIcon, Cog, LogOut } from "lucide-react"
+import { FaChevronDown } from "react-icons/fa";
+import { LuCog } from "react-icons/lu";
+import { HiOutlineLogout } from "react-icons/hi";
+import { FaPlus } from "react-icons/fa6";
+
 
 import Avatar from "boring-avatars";
 
@@ -33,13 +38,17 @@ export function SpaceSwitcher({ spaces }: { spaces: any[] }) {
     });
   }
 
+  const handleAddSpace = async () => {
+    console.log("Add new space");
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton className="w-fit px-1.5 cursor-pointer">
-              <div className="flex h-5 w-5 items-center justify-center overflow-hidden rounded-sm">
+            <SidebarMenuButton className="w-fit px-2 cursor-pointer">
+              <div className="flex items-center justify-center overflow-hidden rounded-sm">
                 {activeSpace?.avatarUrl ? (
                   <img src={activeSpace.avatarUrl} alt={activeSpace.name} className="h-full w-full object-cover" />
                 ) : (
@@ -47,7 +56,7 @@ export function SpaceSwitcher({ spaces }: { spaces: any[] }) {
                 )}
               </div>
               <span className="truncate font-medium">{activeSpace?.name || "My Space"}</span>
-              <ChevronDownIcon className="opacity-50" />
+              <FaChevronDown className="opacity-50" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -57,12 +66,12 @@ export function SpaceSwitcher({ spaces }: { spaces: any[] }) {
             sideOffset={4}
           >
             {spaces.map((space) => (
-              <DropdownMenuItem 
-                key={space.id} 
-                className="gap-2 p-2 cursor-pointer"
+              <DropdownMenuItem
+                key={space.id}
+                className={`gap-2 p-2 cursor-pointer ${activeSpace?.id === space.id ? 'bg-accent text-accent-foreground' : 'hover:bg-accent/50'}`}
                 onClick={() => setActiveSpace(space)}
               >
-                <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-sm">
+                <div className="flex items-center justify-center overflow-hidden rounded-sm">
                   {space.avatarUrl ? (
                     <img src={space.avatarUrl} alt={space.name} className="h-full w-full object-cover" />
                   ) : (
@@ -72,16 +81,26 @@ export function SpaceSwitcher({ spaces }: { spaces: any[] }) {
                 {space.name}
               </DropdownMenuItem>
             ))}
+            <DropdownMenuItem 
+              className="gap-2 p-2 text-xs text-sidebar-foreground/50 cursor-pointer hover:bg-accent/50"
+              onClick={handleAddSpace}
+            >
+              <FaPlus className="size-3 text-sidebar-foreground/50"/>
+              Add Space
+            </DropdownMenuItem>
             <DropdownMenuItem className="gap-2 p-2 cursor-pointer">
-              <Cog className="size-4 text-sidebar-foreground/50"/>
+              <LuCog className="size-4 text-sidebar-foreground/50"/>
               Settings
             </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
             
             <DropdownMenuItem 
+              variant="destructive"
               className="gap-2 p-2 cursor-pointer" 
               onClick={handleSignOut}
             >
-              <LogOut className="size-4 text-sidebar-foreground/50"/>
+              <HiOutlineLogout className="size-4 text-sidebar-foreground/50"/>
               Sign Out
             </DropdownMenuItem>
           </DropdownMenuContent>

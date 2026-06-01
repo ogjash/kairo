@@ -13,7 +13,13 @@ import {
 } from "@/components/ui/sidebar"
 import Header from "@/components/dashboard/header"
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function SpaceLayout({ 
+  children,
+  params
+ }: { 
+  children: React.ReactNode
+  params: {spaceId: string}
+}) {
   return ( 
     <SidebarProvider>
       <AppSidebar />

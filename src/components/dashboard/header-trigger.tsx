@@ -1,6 +1,6 @@
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "../ui/sidebar";
+import { SidebarTrigger } from "../ui/sidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { ChevronDownIcon } from "lucide-react";
+import { FaChevronDown } from "react-icons/fa";
 import { Button } from "../ui/button";
 
 export default function HeaderTrigger(){
@@ -15,7 +15,7 @@ export default function HeaderTrigger(){
             variant="ghost" 
             className="h-full cursor-pointer w-auto p-1 rounded-none hover:bg-transparent focus-visible:ring-0"
           >
-            <ChevronDownIcon />
+            <FaChevronDown className="size-3 opacity-50"/>
           </Button>
         </DropdownMenuTrigger>
           
