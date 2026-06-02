@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -12,6 +12,8 @@ import { AuthCard } from "./auth-card";
 
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
+import { getUserSpaces } from "@/lib/dashboard/space-actions";
+
 
 const schema = z
   .object({
@@ -41,7 +43,7 @@ export function SignUpForm() {
     });
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    const { error } =
+    const { error } = 
       await authClient.signUp.email({
         name: data.name,
         email: data.email,
@@ -53,9 +55,25 @@ export function SignUpForm() {
       return;
     }
 
-    toast.success("Account created");
+    // Get the session after signup
+    const { data: session } = await authClient.getSession();
+    
+    if (!session?.user?.id) {
+      toast.error("Failed to get user session");
+      return;
+    }
 
-    router.push("/dashboard");
+    // Fetch user's spaces (the default space was already created by the auth hook)
+    const spaces = await getUserSpaces(session.user.id);
+    const defaultSpace = spaces.find(s => s.isDefault) || spaces[0];
+
+    if (!defaultSpace) {
+      toast.error("No space found");
+      return;
+    }
+
+    toast.success("Account created");
+    router.push(`/s/${defaultSpace.id}`);
   };
 
   return (

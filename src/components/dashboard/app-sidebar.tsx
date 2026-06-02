@@ -19,8 +19,6 @@ import { RiUserSharedLine } from "react-icons/ri";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { IoMdCloudOutline } from "react-icons/io";
 
-
-
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { getUserSpaces } from "@/lib/dashboard/space-actions";
