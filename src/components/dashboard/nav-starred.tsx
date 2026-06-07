@@ -19,6 +19,16 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 
 import { MoreHorizontalIcon, StarOffIcon, LinkIcon, ArrowUpRightIcon, Trash2Icon } from "lucide-react"
 import { FaAngleRight } from "react-icons/fa6"
+import { TbNotebook } from "react-icons/tb"
+
+function NotebookIcon({ color }: { color?: string | null }) {
+  return (
+    <TbNotebook
+      className="size-4 shrink-0"
+      style={{ color: color ?? "#94a3b8" }}
+    />
+  )
+}
 
 export function NavStarred({
   starred,
@@ -27,7 +37,7 @@ export function NavStarred({
     id: string
     name: string
     url: string
-    emoji: string
+    color?: string | null
   }[]
 }) {
   const { isMobile } = useSidebar();
@@ -51,12 +61,22 @@ export function NavStarred({
             </CollapsibleTrigger>
           </SidebarMenuItem>
           <CollapsibleContent>
-            
-              {starred.map((item) => (
-                <SidebarMenuItem key={item.name}>
+
+          {starred.length === 0 ? (
+            <SidebarMenuItem>
+              <SidebarMenuButton className="text-sidebar-foreground/50" disabled>
+                No starred notebooks
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ) : (
+              starred.map((item) => (
+                <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton asChild>
                     <a href={item.url} title={item.name}>
-                      <span>{item.emoji}</span>
+                      <TbNotebook 
+                        className="size-4 shrink-0"
+                        style={{ color: item.color ?? "#94a3b8"}}
+                      />
                       <span>{item.name}</span>
                     </a>
                   </SidebarMenuButton>
@@ -96,14 +116,8 @@ export function NavStarred({
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </SidebarMenuItem>
-              ))}
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70">
-                  <MoreHorizontalIcon
-                  />
-                  <span>More</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              ))
+            )}
             
           </CollapsibleContent>
         </Collapsible>

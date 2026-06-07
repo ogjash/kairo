@@ -7,8 +7,6 @@ import {
 } from "@/components/ui/collapsible"
 import {
   SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
@@ -17,8 +15,24 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+
 import { ChevronRightIcon, PlusIcon, MoreHorizontalIcon } from "lucide-react"
 import { FaAngleRight } from "react-icons/fa6"
+import { IoMdFolderOpen } from "react-icons/io"
+import { TbNotebook } from "react-icons/tb";
+
+
+function WorkspaceFolder({ color }: { color: string }) {
+  return <IoMdFolderOpen className="size-4 shrink-0" style={{ color }} />
+}
+function NotebookIcon({ color }: { color?: string | null }) {
+  return (
+    <TbNotebook
+      className="size-4 shrink-0"
+      style={{ color: color ?? "#94a3b8" }}
+    />
+  )
+}
 
 export function NavWorkspaces({
   workspaces,
@@ -26,12 +40,13 @@ export function NavWorkspaces({
   workspaces: {
     id: string
     name: string
-    emoji: React.ReactNode
+    color: string
+    url: string
     notebooks: {
       id: string
       name: string
       url: string
-      emoji: React.ReactNode
+      color?: string | null
     }[]
   }[]
 }) {
@@ -54,12 +69,20 @@ export function NavWorkspaces({
             </CollapsibleTrigger>
           </SidebarMenuItem>
           <CollapsibleContent>
-              {workspaces.map((workspace) => (
-                <Collapsible key={workspace.name}>
+
+          {workspaces.length === 0 ? (
+            <SidebarMenuItem>
+              <SidebarMenuButton className="text-sidebar-foreground/50" disabled>
+                No workspaces yet
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ) : (
+              workspaces.map((workspace) => (
+                <Collapsible key={workspace.id}>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <a href="#">
-                        <span>{workspace.emoji}</span>
+                      <a href={workspace.url}>
+                        <WorkspaceFolder color={workspace.color}/>
                         <span>{workspace.name}</span>
                       </a>
                     </SidebarMenuButton>
@@ -78,10 +101,10 @@ export function NavWorkspaces({
                     <CollapsibleContent>
                       <SidebarMenuSub>
                         {workspace.notebooks.map((notebook) => (
-                          <SidebarMenuSubItem key={notebook.name}>
+                          <SidebarMenuSubItem key={notebook.id}>
                             <SidebarMenuSubButton asChild>
-                              <a href="#">
-                                <span>{notebook.emoji}</span>
+                              <a href={notebook.url}>
+                                <NotebookIcon color={notebook.color} />
                                 <span>{notebook.name}</span>
                               </a>
                             </SidebarMenuSubButton>
@@ -91,14 +114,8 @@ export function NavWorkspaces({
                     </CollapsibleContent>
                   </SidebarMenuItem>
                 </Collapsible>
-              ))}
-              <SidebarMenuItem>
-                <SidebarMenuButton className="text-sidebar-foreground/70">
-                  <MoreHorizontalIcon
-                  />
-                  <span>More</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              ))
+            )}
           </CollapsibleContent>
         </Collapsible>
       </SidebarMenu>

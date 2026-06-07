@@ -13,6 +13,7 @@ export const workspaces = pgTable("workspaces", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
+  color: text("color"),
   ownerId: text("owner_id")
     .references(() => user.id, {
       onDelete: "cascade",

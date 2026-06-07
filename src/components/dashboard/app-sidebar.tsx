@@ -25,6 +25,9 @@ import { headers } from "next/headers";
 import { getUserSpaces } from "@/lib/dashboard/space-actions";
 import { getSpaceWorkspacesWithNotebooks, getStarredNotebooksInSpace } from "@/lib/dashboard/sidebar-actions"
 
+const DEFAULT_WORKSPACE_COLOR = "#6366f1";
+const DEFAULT_NOTEBOOK_COLOR = "#94a3b8";
+
 
 export async function AppSidebar({
   spaceId,
@@ -86,25 +89,26 @@ export async function AppSidebar({
     id: nb.id,
     name: nb.name,
     url: `/s/${spaceId}/w/${nb.workspaceId}/n/${nb.id}`,
-    emoji: notebookEmoji(nb),
+    color: nb.color,
   }));
 
   const workspaces = workspaceRows.map((ws) => ({
     id: ws.id,
     name: ws.name,
-    emoji: "📁",
+    color: ws.color ?? DEFAULT_WORKSPACE_COLOR,
+    url: `/s/${spaceId}/w/${ws.id}`,
     notebooks: ws.notebooks.map((nb) => ({
       id: nb.id,
       name: nb.name,
       url: `/s/${spaceId}/w/${ws.id}/n/${nb.id}`,
-      emoji: notebookEmoji(nb),
+      color: nb.color,
     })),
   }));
 
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
-        <SpaceSwitcher spaces={spaces} />
+        <SpaceSwitcher spaces={spaces} currentSpaceId={spaceId} />
         <NavMain items={navMain} />
         <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarHeader>

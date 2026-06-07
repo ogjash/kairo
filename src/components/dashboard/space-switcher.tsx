@@ -21,12 +21,24 @@ import { LuCog } from "react-icons/lu";
 import { HiOutlineLogout } from "react-icons/hi";
 import { FaPlus } from "react-icons/fa6";
 
-
 import Avatar from "boring-avatars";
 
-export function SpaceSwitcher({ spaces }: { spaces: any[] }) {
+type Space = {
+  id: string
+  name: string
+  avatarUrl: string | null
+  isDefault: boolean
+}
+
+export function SpaceSwitcher({ 
+  spaces,
+  currentSpaceId,
+}: { 
+  spaces: Space[]
+  currentSpaceId: string
+}) {
   const router = useRouter()
-  const [activeSpace, setActiveSpace] = React.useState(spaces?.[0] || null)
+  const activeSpace = spaces.find((s) => s.id === currentSpaceId) ?? spaces[0] ?? null
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -69,7 +81,11 @@ export function SpaceSwitcher({ spaces }: { spaces: any[] }) {
               <DropdownMenuItem
                 key={space.id}
                 className={`gap-2 p-2 cursor-pointer ${activeSpace?.id === space.id ? 'bg-accent text-accent-foreground' : 'hover:bg-accent/50'}`}
-                onClick={() => setActiveSpace(space)}
+                onClick={() => {
+                  if (space.id !== currentSpaceId){
+                    router.push(`/s/${space.id}`)
+                  }
+                }}
               >
                 <div className="flex items-center justify-center overflow-hidden rounded-sm">
                   {space.avatarUrl ? (
