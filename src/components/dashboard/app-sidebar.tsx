@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { NavFavorites } from "@/components/dashboard/nav-favorites"
+import { NavStarred } from "@/components/dashboard/nav-starred"
 import { NavMain } from "@/components/dashboard/nav-main"
 import { NavSecondary } from "@/components/dashboard/nav-secondary"
 import { NavWorkspaces } from "@/components/dashboard/nav-workspaces"
@@ -12,7 +12,8 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-import { BsPersonWorkspace, BsCalendar3 } from "react-icons/bs";
+import { LuNotebook } from "react-icons/lu";
+import { BsCalendar3 } from "react-icons/bs";
 import { MdTaskAlt } from "react-icons/md";
 import { PiClockCounterClockwiseBold } from "react-icons/pi";
 import { RiUserSharedLine } from "react-icons/ri";
@@ -22,239 +23,94 @@ import { IoMdCloudOutline } from "react-icons/io";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { getUserSpaces } from "@/lib/dashboard/space-actions";
+import { getSpaceWorkspacesWithNotebooks, getStarredNotebooksInSpace } from "@/lib/dashboard/sidebar-actions"
 
-const data = {
-  navMain: [
-    {
-      title: "All Workspace",
-      url: "/dashboard/all",
-      icon: (
-        <BsPersonWorkspace />
-      ),
-    },
-    {
-      title: "Recently Visited",
-      url: "/dashboard/recent",
-      icon: (
-        <PiClockCounterClockwiseBold />
-      ),
-    },
-    {
-      title: "Tasks",
-      url: "/dashboard/tasks",
-      icon: (
-        <MdTaskAlt />
-      ),
-    },
-    {
-      title: "Calendar",
-      url: "/dashboard/calendar",
-      icon: (
-        <BsCalendar3 />
-      ),
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Imagine",
-      url: "/dashboard/imagine",
-      icon: (
-        <IoMdCloudOutline />
-      ),
-    },
-    {
-      title: "Shared with Me",
-      url: "/dashboard/shared-with-me",
-      icon: (
-        <RiUserSharedLine />
-      ),
-    },
-    {
-      title: "Trash",
-      url: "/dashboard/trash",
-      icon: (
-        <FaRegTrashAlt />
-      ),
-    },
-  ],
-  favorites: [
-    {
-      name: "Project Management & Task Tracking",
-      url: "#",
-      emoji: "📊",
-    },
-    {
-      name: "Family Recipe Collection & Meal Planning",
-      url: "#",
-      emoji: "🍳",
-    },
-    {
-      name: "Fitness Tracker & Workout Routines",
-      url: "#",
-      emoji: "💪",
-    },
-    {
-      name: "Book Notes & Reading List",
-      url: "#",
-      emoji: "📚",
-    },
-    {
-      name: "Sustainable Gardening Tips & Plant Care",
-      url: "#",
-      emoji: "🌱",
-    },
-    {
-      name: "Language Learning Progress & Resources",
-      url: "#",
-      emoji: "🗣️",
-    },
-    {
-      name: "Home Renovation Ideas & Budget Tracker",
-      url: "#",
-      emoji: "🏠",
-    },
-    {
-      name: "Personal Finance & Investment Portfolio",
-      url: "#",
-      emoji: "💰",
-    },
-    {
-      name: "Movie & TV Show Watchlist with Reviews",
-      url: "#",
-      emoji: "🎬",
-    },
-    {
-      name: "Daily Habit Tracker & Goal Setting",
-      url: "#",
-      emoji: "✅",
-    },
-  ],
-  workspaces: [
-    {
-      name: "Personal Life Management",
-      emoji: "🏠",
-      pages: [
-        {
-          name: "Daily Journal & Reflection",
-          url: "#",
-          emoji: "📔",
-        },
-        {
-          name: "Health & Wellness Tracker",
-          url: "#",
-          emoji: "🍏",
-        },
-        {
-          name: "Personal Growth & Learning Goals",
-          url: "#",
-          emoji: "🌟",
-        },
-      ],
-    },
-    {
-      name: "Professional Development",
-      emoji: "💼",
-      pages: [
-        {
-          name: "Career Objectives & Milestones",
-          url: "#",
-          emoji: "🎯",
-        },
-        {
-          name: "Skill Acquisition & Training Log",
-          url: "#",
-          emoji: "🧠",
-        },
-        {
-          name: "Networking Contacts & Events",
-          url: "#",
-          emoji: "🤝",
-        },
-      ],
-    },
-    {
-      name: "Creative Projects",
-      emoji: "🎨",
-      pages: [
-        {
-          name: "Writing Ideas & Story Outlines",
-          url: "#",
-          emoji: "✍️",
-        },
-        {
-          name: "Art & Design Portfolio",
-          url: "#",
-          emoji: "🖼️",
-        },
-        {
-          name: "Music Composition & Practice Log",
-          url: "#",
-          emoji: "🎵",
-        },
-      ],
-    },
-    {
-      name: "Home Management",
-      emoji: "🏡",
-      pages: [
-        {
-          name: "Household Budget & Expense Tracking",
-          url: "#",
-          emoji: "💰",
-        },
-        {
-          name: "Home Maintenance Schedule & Tasks",
-          url: "#",
-          emoji: "🔧",
-        },
-        {
-          name: "Family Calendar & Event Planning",
-          url: "#",
-          emoji: "📅",
-        },
-      ],
-    },
-    {
-      name: "Travel & Adventure",
-      emoji: "🧳",
-      pages: [
-        {
-          name: "Trip Planning & Itineraries",
-          url: "#",
-          emoji: "🗺️",
-        },
-        {
-          name: "Travel Bucket List & Inspiration",
-          url: "#",
-          emoji: "🌎",
-        },
-        {
-          name: "Travel Journal & Photo Gallery",
-          url: "#",
-          emoji: "📸",
-        },
-      ],
-    },
-  ],
-}
 
-export async function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export async function AppSidebar({
+  spaceId,
+  ...props 
+}: React.ComponentProps<typeof Sidebar> & { spaceId: string }) {
   const session = await auth.api.getSession({
     headers: await headers()
   });
 
-  const spaces = session?.user ? await getUserSpaces(session.user.id) : [];
+  if(!session?.user) return null;
+
+  const [spaces, workspaceRows, starredNotebooks] = await Promise.all([
+    getUserSpaces(session.user.id),
+    getSpaceWorkspacesWithNotebooks(spaceId),
+    getStarredNotebooksInSpace(spaceId),
+  ]);
+
+  const navMain = [
+    {
+      title: "All Notebooks",
+      url: `/s/${spaceId}/all`,
+      icon: <LuNotebook />,
+    },
+    {
+      title: "Recently Visited",
+      url: `/s/${spaceId}/recent`,
+      icon: <PiClockCounterClockwiseBold />,
+    },
+    {
+      title: "Tasks",
+      url: `/s/${spaceId}/tasks`,
+      icon: <MdTaskAlt />,
+    },
+    {
+      title: "Calendar",
+      url: `/s/${spaceId}/calendar`,
+      icon: <BsCalendar3 />,
+    },
+  ]
+  const navSecondary = [
+    {
+      title: "Imagine",
+      url: `/s/${spaceId}/imagine`,
+      icon: <IoMdCloudOutline />,
+    },
+    {
+      title: "Shared with Me",
+      url: `/s/${spaceId}/shared-with-me`,
+      icon: <RiUserSharedLine />,
+    },
+    {
+      title: "Trash",
+      url: `/s/${spaceId}/trash`,
+      icon: <FaRegTrashAlt />,
+    },
+  ];
+  
+  const starred = starredNotebooks.map((nb) => ({
+    id: nb.id,
+    name: nb.name,
+    url: `/s/${spaceId}/w/${nb.workspaceId}/n/${nb.id}`,
+    emoji: notebookEmoji(nb),
+  }));
+
+  const workspaces = workspaceRows.map((ws) => ({
+    id: ws.id,
+    name: ws.name,
+    emoji: "📁",
+    notebooks: ws.notebooks.map((nb) => ({
+      id: nb.id,
+      name: nb.name,
+      url: `/s/${spaceId}/w/${ws.id}/n/${nb.id}`,
+      emoji: notebookEmoji(nb),
+    })),
+  }));
 
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SpaceSwitcher spaces={spaces} />
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navMain} />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarHeader>
       <SidebarContent>
-        <NavFavorites favorites={data.favorites} />
-        <NavWorkspaces workspaces={data.workspaces} />
+        <NavStarred starred={starred} />
+        <NavWorkspaces workspaces={workspaces} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

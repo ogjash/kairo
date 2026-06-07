@@ -1,10 +1,10 @@
+import { redirect } from "next/navigation";
 
-
-export default function SpacePage() {
-
-  return(
-    <div className="flex flex-1 flex-col gap-4 px-4 py-10">
-      Dashboard
-    </div>
-  )
+export default async function SpacePage({
+  params
+}: {
+  params: Promise<{ spaceId: string }>;
+}) {
+  const { spaceId } = await params;
+  redirect(`/s/${spaceId}/all`);
 }

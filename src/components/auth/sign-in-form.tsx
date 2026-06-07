@@ -53,7 +53,6 @@ export function SignInForm() {
       return;
     }
 
-    // Fetch user's spaces and redirect to default one
     const spaces = await getUserSpaces(session.user.id);
     const defaultSpace = spaces.find(s => s.isDefault) || spaces[0];
 
@@ -64,7 +63,6 @@ export function SignInForm() {
 
     toast.success("Signed in successfully");
     
-    // Redirect to the user's default space
     router.push(`/s/${defaultSpace.id}`);
   };
 

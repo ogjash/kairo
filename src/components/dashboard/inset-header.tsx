@@ -1,5 +1,4 @@
 import { SearchIcon } from "lucide-react";
-import { SidebarTrigger } from "../ui/sidebar";
 import { Input } from "../ui/input";
 import HeaderTrigger from "./header-trigger";
 

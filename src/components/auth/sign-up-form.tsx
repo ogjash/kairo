@@ -55,7 +55,6 @@ export function SignUpForm() {
       return;
     }
 
-    // Get the session after signup
     const { data: session } = await authClient.getSession();
     
     if (!session?.user?.id) {
@@ -63,7 +62,6 @@ export function SignUpForm() {
       return;
     }
 
-    // Fetch user's spaces (the default space was already created by the auth hook)
     const spaces = await getUserSpaces(session.user.id);
     const defaultSpace = spaces.find(s => s.isDefault) || spaces[0];
 
