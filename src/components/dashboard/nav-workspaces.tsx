@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -27,12 +28,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { ChevronRightIcon, PlusIcon } from "lucide-react"
+
 import { FaAngleRight, FaPlus } from "react-icons/fa6"
-import { IoMdFolderOpen } from "react-icons/io"
+import { IoFolderOpenOutline } from "react-icons/io5"
 import { TbNotebook } from "react-icons/tb"
 import { FiInbox } from "react-icons/fi"
 import { createWorkspace, createNotebook } from "@/lib/dashboard/workspace-actions"
+import Link from "next/link"
 
 const WORKSPACE_COLORS = ["#6366f1", "#ec4899", "#22c55e", "#f59e0b", "#06b6d4"]
 const NOTEBOOK_COLORS = ["#94a3b8", "#6366f1", "#ec4899", "#22c55e", "#f59e0b"]
@@ -41,7 +43,7 @@ function WorkspaceIcon({ isDefault, color }: { isDefault: boolean; color: string
   if (isDefault) {
     return <FiInbox className="size-4 shrink-0 text-sidebar-foreground/70" />
   }
-  return <IoMdFolderOpen className="size-4 shrink-0" style={{ color }} />
+  return <IoFolderOpenOutline className="size-4 shrink-0" style={{ color }} />
 }
 
 function NotebookIcon({ color }: { color?: string | null }) {
@@ -191,27 +193,27 @@ export function NavWorkspaces({
                 <Collapsible key={workspace.id}>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
-                      <a href={workspace.url}>
+                      <Link href={workspace.url}>
                         <WorkspaceIcon
                           isDefault={workspace.isDefault}
                           color={workspace.color}
                         />
                         <span>{workspace.name}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                     <CollapsibleTrigger asChild>
                       <SidebarMenuAction
                         className="left-2 bg-sidebar-accent text-sidebar-accent-foreground data-[state=open]:rotate-90"
                         showOnHover
                       >
-                        <ChevronRightIcon />
+                        <FaAngleRight />
                       </SidebarMenuAction>
                     </CollapsibleTrigger>
                     <SidebarMenuAction
                       showOnHover
                       onClick={() => openNotebookSheet(workspace.id)}
                     >
-                      <PlusIcon />
+                      <FaPlus />
                     </SidebarMenuAction>
                     <CollapsibleContent>
                       <SidebarMenuSub>
@@ -225,10 +227,10 @@ export function NavWorkspaces({
                           workspace.notebooks.map((notebook) => (
                             <SidebarMenuSubItem key={notebook.id}>
                               <SidebarMenuSubButton asChild>
-                                <a href={notebook.url}>
+                                <Link href={notebook.url}>
                                   <NotebookIcon color={notebook.color} />
                                   <span>{notebook.name}</span>
-                                </a>
+                                </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           ))

@@ -20,6 +20,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/colla
 import { MoreHorizontalIcon, StarOffIcon, LinkIcon, ArrowUpRightIcon, Trash2Icon } from "lucide-react"
 import { FaAngleRight, FaPlus } from "react-icons/fa6"
 import { TbNotebook } from "react-icons/tb"
+import Link from "next/link"
 
 function NotebookIcon({ color }: { color?: string | null }) {
   return (
@@ -79,10 +80,10 @@ export function NavStarred({
               starred.map((item) => (
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url} title={item.name}>
+                    <Link href={item.url} title={item.name}>
                       <NotebookIcon color={item.color}/>
                       <span>{item.name}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
