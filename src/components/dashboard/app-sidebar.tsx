@@ -26,8 +26,6 @@ import { getUserSpaces } from "@/lib/dashboard/space-actions";
 import { getSpaceWorkspacesWithNotebooks, getStarredNotebooksInSpace } from "@/lib/dashboard/sidebar-actions"
 
 const DEFAULT_WORKSPACE_COLOR = "#6366f1";
-const DEFAULT_NOTEBOOK_COLOR = "#94a3b8";
-
 
 export async function AppSidebar({
   spaceId,
@@ -41,7 +39,7 @@ export async function AppSidebar({
 
   const [spaces, workspaceRows, starredNotebooks] = await Promise.all([
     getUserSpaces(session.user.id),
-    getSpaceWorkspacesWithNotebooks(spaceId),
+    getSpaceWorkspacesWithNotebooks(spaceId, session.user.id),
     getStarredNotebooksInSpace(spaceId),
   ]);
 
@@ -95,6 +93,7 @@ export async function AppSidebar({
   const workspaces = workspaceRows.map((ws) => ({
     id: ws.id,
     name: ws.name,
+    isDefault: ws.isDefault,
     color: ws.color ?? DEFAULT_WORKSPACE_COLOR,
     url: `/s/${spaceId}/w/${ws.id}`,
     notebooks: ws.notebooks.map((nb) => ({
@@ -104,7 +103,7 @@ export async function AppSidebar({
       color: nb.color,
     })),
   }));
-
+  
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -114,7 +113,7 @@ export async function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavStarred starred={starred} />
-        <NavWorkspaces workspaces={workspaces} />
+        <NavWorkspaces spaceId={spaceId} workspaces={workspaces} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   Collapsible,
   CollapsibleContent,
@@ -15,16 +17,33 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-
-import { ChevronRightIcon, PlusIcon, MoreHorizontalIcon } from "lucide-react"
-import { FaAngleRight } from "react-icons/fa6"
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { ChevronRightIcon, PlusIcon } from "lucide-react"
+import { FaAngleRight, FaPlus } from "react-icons/fa6"
 import { IoMdFolderOpen } from "react-icons/io"
-import { TbNotebook } from "react-icons/tb";
+import { TbNotebook } from "react-icons/tb"
+import { FiInbox } from "react-icons/fi"
+import { createWorkspace, createNotebook } from "@/lib/dashboard/workspace-actions"
 
+const WORKSPACE_COLORS = ["#6366f1", "#ec4899", "#22c55e", "#f59e0b", "#06b6d4"]
+const NOTEBOOK_COLORS = ["#94a3b8", "#6366f1", "#ec4899", "#22c55e", "#f59e0b"]
 
-function WorkspaceFolder({ color }: { color: string }) {
+function WorkspaceIcon({ isDefault, color }: { isDefault: boolean; color: string }) {
+  if (isDefault) {
+    return <FiInbox className="size-4 shrink-0 text-sidebar-foreground/70" />
+  }
   return <IoMdFolderOpen className="size-4 shrink-0" style={{ color }} />
 }
+
 function NotebookIcon({ color }: { color?: string | null }) {
   return (
     <TbNotebook
@@ -34,12 +53,43 @@ function NotebookIcon({ color }: { color?: string | null }) {
   )
 }
 
+function ColorPicker({
+  colors,
+  value,
+  onChange,
+}: {
+  colors: string[]
+  value: string
+  onChange: (color: string) => void
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {colors.map((c) => (
+        <button
+          key={c}
+          type="button"
+          onClick={() => onChange(c)}
+          className="size-7 rounded-full border-2 transition-transform hover:scale-110"
+          style={{
+            backgroundColor: c,
+            borderColor: value === c ? "var(--foreground)" : "transparent",
+          }}
+          aria-label={`Select color ${c}`}
+        />
+      ))}
+    </div>
+  )
+}
+
 export function NavWorkspaces({
+  spaceId,
   workspaces,
 }: {
+  spaceId: string
   workspaces: {
     id: string
     name: string
+    isDefault: boolean
     color: string
     url: string
     notebooks: {
@@ -50,39 +100,102 @@ export function NavWorkspaces({
     }[]
   }[]
 }) {
-  return (
-    <SidebarGroup>
-      <SidebarMenu>
-        <Collapsible>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="group flex items-center gap-2 cursor-pointer">
-              Workspaces
-            </SidebarMenuButton>
+  const router = useRouter()
+  const [workspaceSheetOpen, setWorkspaceSheetOpen] = useState(false)
+  const [notebookSheetOpen, setNotebookSheetOpen] = useState(false)
+  const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null)
+  const [name, setName] = useState("")
+  const [color, setColor] = useState(WORKSPACE_COLORS[0])
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-            <CollapsibleTrigger asChild>
+  function resetForm() {
+    setName("")
+    setColor(WORKSPACE_COLORS[0])
+    setActiveWorkspaceId(null)
+  }
+
+  async function handleCreateWorkspace() {
+    if (!name.trim()) return
+    setIsSubmitting(true)
+    try {
+      const result = await createWorkspace(spaceId, name.trim(), color)
+      if (result.success) {
+        setWorkspaceSheetOpen(false)
+        resetForm()
+        router.refresh()
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  function openNotebookSheet(workspaceId: string) {
+    setActiveWorkspaceId(workspaceId)
+    setName("")
+    setColor(NOTEBOOK_COLORS[0])
+    setNotebookSheetOpen(true)
+  }
+
+  async function handleCreateNotebook() {
+    if (!name.trim() || !activeWorkspaceId) return
+    setIsSubmitting(true)
+    try {
+      const result = await createNotebook(
+        spaceId,
+        activeWorkspaceId,
+        name.trim(),
+        color
+      )
+      if (result.success && result.notebook) {
+        setNotebookSheetOpen(false)
+        resetForm()
+        router.refresh()
+        router.push(
+          `/s/${spaceId}/w/${activeWorkspaceId}/n/${result.notebook.id}`
+        )
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <>
+      <SidebarGroup>
+        <SidebarMenu>
+          <Collapsible>
+            <SidebarMenuItem>
+              <SidebarMenuButton className="group flex items-center gap-2 cursor-pointer">
+                Workspaces
+              </SidebarMenuButton>
+
               <SidebarMenuAction
-                className="right-1 flex items-center text-sidebar-accent-foreground/50 hover:text-sidebar-accent-foreground data-[state=open]:rotate-90"
+                onClick={() => setWorkspaceSheetOpen(true)}
+                className="right-6 flex items-center text-sidebar-accent-foreground/50 hover:text-sidebar-accent-foreground"
                 showOnHover
               >
-                <FaAngleRight />
+                <FaPlus />
               </SidebarMenuAction>
-            </CollapsibleTrigger>
-          </SidebarMenuItem>
-          <CollapsibleContent>
 
-          {workspaces.length === 0 ? (
-            <SidebarMenuItem>
-              <SidebarMenuButton className="text-sidebar-foreground/50" disabled>
-                No workspaces yet
-              </SidebarMenuButton>
+              <CollapsibleTrigger asChild>
+                <SidebarMenuAction
+                  className="right-1 flex items-center text-sidebar-accent-foreground/50 hover:text-sidebar-accent-foreground data-[state=open]:rotate-90"
+                  showOnHover
+                >
+                  <FaAngleRight />
+                </SidebarMenuAction>
+              </CollapsibleTrigger>
             </SidebarMenuItem>
-          ) : (
-              workspaces.map((workspace) => (
+            <CollapsibleContent>
+              {workspaces.map((workspace) => (
                 <Collapsible key={workspace.id}>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
                       <a href={workspace.url}>
-                        <WorkspaceFolder color={workspace.color}/>
+                        <WorkspaceIcon
+                          isDefault={workspace.isDefault}
+                          color={workspace.color}
+                        />
                         <span>{workspace.name}</span>
                       </a>
                     </SidebarMenuButton>
@@ -94,31 +207,113 @@ export function NavWorkspaces({
                         <ChevronRightIcon />
                       </SidebarMenuAction>
                     </CollapsibleTrigger>
-                    <SidebarMenuAction showOnHover>
-                      <PlusIcon
-                      />
+                    <SidebarMenuAction
+                      showOnHover
+                      onClick={() => openNotebookSheet(workspace.id)}
+                    >
+                      <PlusIcon />
                     </SidebarMenuAction>
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {workspace.notebooks.map((notebook) => (
-                          <SidebarMenuSubItem key={notebook.id}>
-                            <SidebarMenuSubButton asChild>
-                              <a href={notebook.url}>
-                                <NotebookIcon color={notebook.color} />
-                                <span>{notebook.name}</span>
-                              </a>
+                        {workspace.notebooks.length === 0 ? (
+                          <SidebarMenuSubItem>
+                            <SidebarMenuSubButton className="pointer-events-none text-sidebar-foreground/50 italic text-xs">
+                              No notebooks yet
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
-                        ))}
+                        ) : (
+                          workspace.notebooks.map((notebook) => (
+                            <SidebarMenuSubItem key={notebook.id}>
+                              <SidebarMenuSubButton asChild>
+                                <a href={notebook.url}>
+                                  <NotebookIcon color={notebook.color} />
+                                  <span>{notebook.name}</span>
+                                </a>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))
+                        )}
                       </SidebarMenuSub>
                     </CollapsibleContent>
                   </SidebarMenuItem>
                 </Collapsible>
-              ))
-            )}
-          </CollapsibleContent>
-        </Collapsible>
-      </SidebarMenu>
-    </SidebarGroup>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
+        </SidebarMenu>
+      </SidebarGroup>
+
+      <Sheet open={workspaceSheetOpen} onOpenChange={setWorkspaceSheetOpen}>
+        <SheetContent side="left" className="w-full sm:max-w-sm">
+          <SheetHeader>
+            <SheetTitle>New workspace</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-4 px-4">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="workspace-name">Name</Label>
+              <Input
+                id="workspace-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Computer Science"
+                onKeyDown={(e) => e.key === "Enter" && handleCreateWorkspace()}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label>Color</Label>
+              <ColorPicker
+                colors={WORKSPACE_COLORS}
+                value={color}
+                onChange={setColor}
+              />
+            </div>
+          </div>
+          <SheetFooter>
+            <Button
+              onClick={handleCreateWorkspace}
+              disabled={!name.trim() || isSubmitting}
+            >
+              {isSubmitting ? "Creating…" : "Create workspace"}
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+
+      <Sheet open={notebookSheetOpen} onOpenChange={setNotebookSheetOpen}>
+        <SheetContent side="left" className="w-full sm:max-w-sm">
+          <SheetHeader>
+            <SheetTitle>New notebook</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-4 px-4">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="notebook-name">Name</Label>
+              <Input
+                id="notebook-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Organic Chemistry"
+                onKeyDown={(e) => e.key === "Enter" && handleCreateNotebook()}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label>Color</Label>
+              <ColorPicker
+                colors={NOTEBOOK_COLORS}
+                value={color}
+                onChange={setColor}
+              />
+            </div>
+          </div>
+          <SheetFooter>
+            <Button
+              onClick={handleCreateNotebook}
+              disabled={!name.trim() || isSubmitting}
+            >
+              {isSubmitting ? "Creating…" : "Create notebook"}
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    </>
   )
 }

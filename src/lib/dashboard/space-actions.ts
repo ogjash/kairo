@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { spaces } from "@/lib/db/schema/spaces";
 import { eq, desc } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
+import { createDefaultUnsortedWorkspace } from "./workspace-actions";
 
 export async function createSpaceWithAvatar(userId: string, spaceName: string, isDefault = false) {
   const newSpaceId = uuidv4();
@@ -16,6 +17,8 @@ export async function createSpaceWithAvatar(userId: string, spaceName: string, i
       isDefault: isDefault,
       avatarUrl: null,
     }).returning();
+
+    await createDefaultUnsortedWorkspace(newSpaceId, userId);
 
     console.log("Space created successfully:", newSpace);
     return { success: true, space: newSpace };

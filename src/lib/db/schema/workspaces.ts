@@ -3,6 +3,7 @@ import {
   uuid,
   text,
   timestamp,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 import { user } from "./auth-schema";
@@ -14,6 +15,7 @@ export const workspaces = pgTable("workspaces", {
   name: text("name").notNull(),
   description: text("description"),
   color: text("color"),
+  isDefault: boolean("is_default").default(false).notNull(),
   ownerId: text("owner_id")
     .references(() => user.id, {
       onDelete: "cascade",

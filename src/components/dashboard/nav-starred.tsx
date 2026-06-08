@@ -18,7 +18,7 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible"
 
 import { MoreHorizontalIcon, StarOffIcon, LinkIcon, ArrowUpRightIcon, Trash2Icon } from "lucide-react"
-import { FaAngleRight } from "react-icons/fa6"
+import { FaAngleRight, FaPlus } from "react-icons/fa6"
 import { TbNotebook } from "react-icons/tb"
 
 function NotebookIcon({ color }: { color?: string | null }) {
@@ -51,6 +51,13 @@ export function NavStarred({
               Starred
             </SidebarMenuButton>
 
+            <SidebarMenuAction
+                className="right-6 flex items-center text-sidebar-accent-foreground/50 hover:text-sidebar-accent-foreground"
+                showOnHover
+              >
+              <FaPlus />
+            </SidebarMenuAction>
+
             <CollapsibleTrigger asChild>
               <SidebarMenuAction
                 className="right-1 flex items-center text-sidebar-accent-foreground/50 hover:text-sidebar-accent-foreground data-[state=open]:rotate-90"
@@ -64,8 +71,8 @@ export function NavStarred({
 
           {starred.length === 0 ? (
             <SidebarMenuItem>
-              <SidebarMenuButton className="text-sidebar-foreground/50" disabled>
-                No starred notebooks
+              <SidebarMenuButton className="italic text-xs text-sidebar-foreground/50" disabled>
+                Star notebooks to keep them close
               </SidebarMenuButton>
             </SidebarMenuItem>
           ) : (
@@ -73,10 +80,7 @@ export function NavStarred({
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton asChild>
                     <a href={item.url} title={item.name}>
-                      <TbNotebook 
-                        className="size-4 shrink-0"
-                        style={{ color: item.color ?? "#94a3b8"}}
-                      />
+                      <NotebookIcon color={item.color}/>
                       <span>{item.name}</span>
                     </a>
                   </SidebarMenuButton>
