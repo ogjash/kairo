@@ -18,13 +18,13 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle 
+} from "../ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -35,6 +35,7 @@ import { TbNotebook } from "react-icons/tb"
 import { FiInbox } from "react-icons/fi"
 import { createWorkspace, createNotebook } from "@/lib/dashboard/workspace-actions"
 import Link from "next/link"
+
 
 const WORKSPACE_COLORS = ["#6366f1", "#ec4899", "#22c55e", "#f59e0b", "#06b6d4"]
 const NOTEBOOK_COLORS = ["#94a3b8", "#6366f1", "#ec4899", "#22c55e", "#f59e0b"]
@@ -103,8 +104,8 @@ export function NavWorkspaces({
   }[]
 }) {
   const router = useRouter()
-  const [workspaceSheetOpen, setWorkspaceSheetOpen] = useState(false)
-  const [notebookSheetOpen, setNotebookSheetOpen] = useState(false)
+  const [workspaceDialogOpen, setWorkspaceDialogOpen] = useState(false)
+  const [notebookDialogOpen, setNotebookDialogOpen] = useState(false)
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null)
   const [name, setName] = useState("")
   const [color, setColor] = useState(WORKSPACE_COLORS[0])
@@ -122,7 +123,7 @@ export function NavWorkspaces({
     try {
       const result = await createWorkspace(spaceId, name.trim(), color)
       if (result.success) {
-        setWorkspaceSheetOpen(false)
+        setWorkspaceDialogOpen(false)
         resetForm()
         router.refresh()
       }
@@ -131,11 +132,11 @@ export function NavWorkspaces({
     }
   }
 
-  function openNotebookSheet(workspaceId: string) {
+  function openNotebookDialog(workspaceId: string) {
     setActiveWorkspaceId(workspaceId)
     setName("")
     setColor(NOTEBOOK_COLORS[0])
-    setNotebookSheetOpen(true)
+    setNotebookDialogOpen(true)
   }
 
   async function handleCreateNotebook() {
@@ -149,7 +150,7 @@ export function NavWorkspaces({
         color
       )
       if (result.success && result.notebook) {
-        setNotebookSheetOpen(false)
+        setNotebookDialogOpen(false)
         resetForm()
         router.refresh()
         router.push(
@@ -172,7 +173,7 @@ export function NavWorkspaces({
               </SidebarMenuButton>
 
               <SidebarMenuAction
-                onClick={() => setWorkspaceSheetOpen(true)}
+                onClick={() => setWorkspaceDialogOpen(true)}
                 className="right-6 flex items-center text-sidebar-accent-foreground/50 hover:text-sidebar-accent-foreground"
                 showOnHover
               >
@@ -211,7 +212,7 @@ export function NavWorkspaces({
                     </CollapsibleTrigger>
                     <SidebarMenuAction
                       showOnHover
-                      onClick={() => openNotebookSheet(workspace.id)}
+                      onClick={() => openNotebookDialog(workspace.id)}
                     >
                       <FaPlus />
                     </SidebarMenuAction>
@@ -245,11 +246,11 @@ export function NavWorkspaces({
         </SidebarMenu>
       </SidebarGroup>
 
-      <Sheet open={workspaceSheetOpen} onOpenChange={setWorkspaceSheetOpen}>
-        <SheetContent side="left" className="w-full sm:max-w-sm">
-          <SheetHeader>
-            <SheetTitle>New workspace</SheetTitle>
-          </SheetHeader>
+      <Dialog open={workspaceDialogOpen} onOpenChange={setWorkspaceDialogOpen}>
+        <DialogContent className="w-full sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>New workspace</DialogTitle>
+          </DialogHeader>
           <div className="flex flex-col gap-4 px-4">
             <div className="flex flex-col gap-2">
               <Label htmlFor="workspace-name">Name</Label>
@@ -270,22 +271,22 @@ export function NavWorkspaces({
               />
             </div>
           </div>
-          <SheetFooter>
+          <DialogFooter>
             <Button
               onClick={handleCreateWorkspace}
               disabled={!name.trim() || isSubmitting}
             >
               {isSubmitting ? "Creating…" : "Create workspace"}
             </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      <Sheet open={notebookSheetOpen} onOpenChange={setNotebookSheetOpen}>
-        <SheetContent side="left" className="w-full sm:max-w-sm">
-          <SheetHeader>
-            <SheetTitle>New notebook</SheetTitle>
-          </SheetHeader>
+      <Dialog open={notebookDialogOpen} onOpenChange={setNotebookDialogOpen}>
+        <DialogContent className="w-full sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>New notebook</DialogTitle>
+          </DialogHeader>
           <div className="flex flex-col gap-4 px-4">
             <div className="flex flex-col gap-2">
               <Label htmlFor="notebook-name">Name</Label>
@@ -306,16 +307,16 @@ export function NavWorkspaces({
               />
             </div>
           </div>
-          <SheetFooter>
+          <DialogFooter>
             <Button
               onClick={handleCreateNotebook}
               disabled={!name.trim() || isSubmitting}
             >
               {isSubmitting ? "Creating…" : "Create notebook"}
             </Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
