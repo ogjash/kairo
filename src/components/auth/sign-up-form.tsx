@@ -91,7 +91,7 @@ export function SignUpForm() {
               {...register("name")}
               type="text"
               placeholder="John Doe"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-500"
+              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
             />
             {errors.name && <div className="text-red-400">{errors.name.message}</div>}
           </div>
@@ -101,16 +101,16 @@ export function SignUpForm() {
               {...register("email")}
               type="email"
               placeholder="your@email.com"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-500"
+              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
             />
             {errors.email && <div className="text-red-400">{errors.email.message}</div>}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input 
+            <Input
               {...register("password")}
               type="password"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-500"
+              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
             />
             {errors.password && <div className="text-red-400">{errors.password.message}</div>}
           </div>
@@ -119,12 +119,12 @@ export function SignUpForm() {
             <Input 
               {...register("confirmPassword")} 
               type="password"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-500"
+              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
             />
             {errors.confirmPassword && <div className="text-red-400">{errors.confirmPassword.message}</div>}
           </div>
           <div className="w-full flex items-center justify-center pt-2">
-            <Button type="submit" className="w-full p-6 text-lg bg-[#71B2FF] hover:bg-[#5b8ac6] disabled:bg-[#43618b]">
+            <Button type="submit" className="w-full p-6 text-lg bg-[#c73f3f] hover:bg-[#bb3336] disabled:bg-[#bc827c]">
               {isSubmitting ? "Signing up..." : "Sign Up"}
             </Button>
           </div>

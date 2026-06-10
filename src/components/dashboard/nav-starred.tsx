@@ -46,7 +46,7 @@ export function NavStarred({
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarMenu>
-        <Collapsible>
+        <Collapsible defaultOpen={true}>
           <SidebarMenuItem>
             <SidebarMenuButton className="group flex items-center gap-2 cursor-pointer">
               Starred

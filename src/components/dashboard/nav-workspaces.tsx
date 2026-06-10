@@ -166,7 +166,7 @@ export function NavWorkspaces({
     <>
       <SidebarGroup>
         <SidebarMenu>
-          <Collapsible>
+          <Collapsible defaultOpen={true}>
             <SidebarMenuItem>
               <SidebarMenuButton className="group flex items-center gap-2 cursor-pointer">
                 Workspaces
@@ -220,7 +220,7 @@ export function NavWorkspaces({
                       <SidebarMenuSub>
                         {workspace.notebooks.length === 0 ? (
                           <SidebarMenuSubItem>
-                            <SidebarMenuSubButton className="pointer-events-none text-sidebar-foreground/50 italic text-xs">
+                            <SidebarMenuSubButton className="italic !text-xs text-sidebar-foreground/50" aria-disabled>
                               No notebooks yet
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>

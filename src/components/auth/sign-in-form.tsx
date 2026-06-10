@@ -83,7 +83,7 @@ export function SignInForm() {
               {...register("email")}
               type="email"
               placeholder="your@email.com"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-500"
+              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
             />
             {errors.email && <div className="text-red-400">{errors.email.message}</div>}
           </div>
@@ -101,12 +101,12 @@ export function SignInForm() {
               {...register("password")}
               type="password"
               placeholder="Must have at least 8 characters"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-500"
+              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
             />
             {errors.password && <div className="text-red-400">{errors.password.message}</div>}
           </div>
           <div className="w-full flex items-center justify-center">
-            <Button disabled={isSubmitting} type="submit" className="w-full p-6 text-lg bg-[#71B2FF] hover:bg-[#5b8ac6] disabled:bg-[#43618b]">
+            <Button disabled={isSubmitting} type="submit" className="w-full p-6 text-lg bg-[#c73f3f] hover:bg-[#bb3336] disabled:bg-[#bc827c]">
               {isSubmitting ? "Signing in..." : "Sign In"}
             </Button>
           </div>
