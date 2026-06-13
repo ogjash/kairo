@@ -41,11 +41,8 @@ export default function NavbarDemo() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <GlassSurface 
-      width={1000} 
-      height={60}
-      borderRadius={50} 
-      className="mx-auto my-4 flex justify-between items-center"
+    <div  
+      className="mx-auto flex justify-between items-center"
     >
       <Navbar>
         {/* Desktop Navigation */}
@@ -103,7 +100,7 @@ export default function NavbarDemo() {
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
-    </GlassSurface>
+    </div>
   );
 }
 
