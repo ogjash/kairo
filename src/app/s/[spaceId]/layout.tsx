@@ -37,7 +37,7 @@ export default async function SpaceLayout({
     redirect("/");
   }
 
-  return ( 
+  return (
     <SidebarProvider>
       <AppSidebar spaceId={spaceId} />
 

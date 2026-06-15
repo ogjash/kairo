@@ -6,7 +6,7 @@ import { CloudScene } from "@/components/auth/cloud-scene";
 
 export default function Background() {
   return(
-    <div className="pointer-events-none absolute inset-0 z-0 h-full w-full bg-linear-to-t from-[#C73F3F] to-[#252525] flex-col items-center justify-center">
+    <div className="pointer-events-none absolute inset-0 z-0 h-full w-full bg-linear-to-t from-[#2a3553] to-[#0b1020] flex-col items-center justify-center">
 
       <ShootingStars />
       <StarsBackground />

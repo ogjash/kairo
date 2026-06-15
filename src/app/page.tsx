@@ -1,13 +1,13 @@
-import { CloudScene } from "@/components/home/cloude-scene";
-import NavbarDemo from "@/components/home/resizable-navbar-demo";
-import GlassSurface from "@/components/ui/GlassSurface";
-import Image from "next/image";
+"use client"
 
+import NavbarComp from "@/components/home/navbar";
+import VantaClouds from "@/components/home/cloud-background";
+import Image from "next/image";
 
 export default function Home() {
   return(
     <>
-      <div className="relative isolate min-h-screen overflow-hidden bg-linear-to-t from-[#5a6776] to-[#ff7b74]">
+      <div className="relative overflow-hidden min-h-screen w-full flex flex-col items-center justify-center">
         <Image
           src="/assets/paper-texture.png"
           alt=""
@@ -16,16 +16,15 @@ export default function Home() {
           aria-hidden
           priority
         />
-        <CloudScene />
+        <VantaClouds />
 
-        <NavbarDemo />
+        <div className="absolute z-10 text-4xl md:text-5xl font-laviossa text-center mx-20 max-w-4xl text-gray-600 -translate-y-40 md:leading-14">
+          Think less about organizing, More about ideas
+        </div>
+
+        <NavbarComp />
         
-      </div> 
-
-      <div className="h-screen text-5xl">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem non nobis libero blanditiis similique. Dolore officiis cumque ad vel! Consequuntur aspernatur quidem, nisi est autem in dolorem natus deserunt illo.
       </div>
-
     </>
   );
 }

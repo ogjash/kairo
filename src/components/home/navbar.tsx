@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Navbar,
   NavBody,
@@ -11,30 +12,29 @@ import {
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
 import { useState } from "react";
-import GlassSurface from "../ui/GlassSurface";
 import Link from "next/link";
 
-export default function NavbarDemo() {
+export default function NavbarComp() {
   const navItems = [
     {
       name: "Product",
-      link: "#features",
+      link: "/product",
     },
     {
       name: "Imagine",
-      link: "#pricing",
+      link: "/imagine",
     },
     {
       name: "Community",
-      link: "#contact",
+      link: "/community",
     },
     {
       name: "Pricing",
-      link: "#contact",
+      link: "/princing",
     },
     {
       name: "Learn",
-      link: "#contact",
+      link: "/learn",
     },
   ];
 
@@ -50,8 +50,8 @@ export default function NavbarDemo() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center">
-            <NavbarButton href="/sign-in"  variant="secondary">Login</NavbarButton>
-            <NavbarButton href="/sign-up" variant="primary" className="rounded-2xl">Try Kairo Free</NavbarButton>
+            <NavbarButton href="/sign-in"  variant="secondary" className="!text-gray-900">Login</NavbarButton>
+            <NavbarButton href="/sign-up" variant="dark" className="rounded-2xl !bg-gray-900 !text-gray-200">Try Kairo Free</NavbarButton>
           </div>
         </NavBody>
 
@@ -74,7 +74,7 @@ export default function NavbarDemo() {
                 key={`mobile-link-${idx}`}
                 href={item.link}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-neutral-600 dark:text-neutral-300"
+                className="relative text-gray-900"
               >
                 <span className="block">{item.name}</span>
               </Link>
@@ -83,16 +83,16 @@ export default function NavbarDemo() {
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 href="/sign-in"
-                variant="primary"
-                className="w-full"
+                variant="dark"
+                className="w-full !bg-gray-900 !text-gray-200"
               >
                 Login
               </NavbarButton>
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 href="/sign-up"
-                variant="primary"
-                className="w-full"
+                variant="dark"
+                className="w-full !bg-gray-900 !text-gray-200"
               >
                 Try Kairo Free
               </NavbarButton>

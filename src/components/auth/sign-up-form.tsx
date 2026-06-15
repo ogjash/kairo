@@ -91,7 +91,7 @@ export function SignUpForm() {
               {...register("name")}
               type="text"
               placeholder="John Doe"
-              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
+              className="p-5 focus-visible:ring-0 focus-visible:border-blue-400"
             />
             {errors.name && <div className="text-red-400">{errors.name.message}</div>}
           </div>
@@ -101,7 +101,7 @@ export function SignUpForm() {
               {...register("email")}
               type="email"
               placeholder="your@email.com"
-              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
+              className="p-5 focus-visible:ring-0 focus-visible:border-blue-400"
             />
             {errors.email && <div className="text-red-400">{errors.email.message}</div>}
           </div>
@@ -110,7 +110,7 @@ export function SignUpForm() {
             <Input
               {...register("password")}
               type="password"
-              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
+              className="p-5 focus-visible:ring-0 focus-visible:border-blue-400"
             />
             {errors.password && <div className="text-red-400">{errors.password.message}</div>}
           </div>
@@ -119,12 +119,12 @@ export function SignUpForm() {
             <Input 
               {...register("confirmPassword")} 
               type="password"
-              className="p-5 focus-visible:ring-0 focus-visible:border-[#e85c58]"
+              className="p-5 focus-visible:ring-0 focus-visible:border-blue-400"
             />
             {errors.confirmPassword && <div className="text-red-400">{errors.confirmPassword.message}</div>}
           </div>
           <div className="w-full flex items-center justify-center pt-2">
-            <Button type="submit" className="w-full p-6 text-lg bg-[#c73f3f] hover:bg-[#bb3336] disabled:bg-[#bc827c]">
+            <Button type="submit" className="w-full p-6 text-lg bg-[#83a0fd] hover:bg-[#9bb3ff] disabled:bg-[#95a4c9]">
               {isSubmitting ? "Signing up..." : "Sign Up"}
             </Button>
           </div>

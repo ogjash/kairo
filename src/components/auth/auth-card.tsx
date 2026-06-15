@@ -35,7 +35,7 @@ export function AuthCard({
   oauthText,
 }: AuthCardProps) {
   return (
-    <Card className="dark rounded-4xl ring-0 w-full max-w-xl bg-[#252525] p-20">
+    <Card className="dark rounded-4xl ring-0 w-full max-w-xl bg-gray-700/30 backdrop-blur-sm border border-gray-500/40 p-20">
       <CardHeader>
         <CardTitle className="flex justify-center text-2xl">{title}</CardTitle>
         <CardDescription className="flex justify-center px-auto py-3 text-center">
