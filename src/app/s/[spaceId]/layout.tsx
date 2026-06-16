@@ -17,7 +17,7 @@ export default async function SpaceLayout({
   params
  }: { 
   children: React.ReactNode
-  params: {spaceId: string}
+  params: Promise<{ spaceId: string }>
 }) {
 
   const { spaceId } = await params;
