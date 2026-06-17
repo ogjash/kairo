@@ -9,12 +9,12 @@ export default function Header() {
 
       <HeaderTrigger />
 
-      <div className="flex max-w-md w-full  relative pointer-events-auto">
+      <div className="flex max-w-xs sm:max-w-md w-full relative pointer-events-auto ml-10 sm:ml-0">
           <SearchIcon className="absolute m-2 h-3 w-3 text-sidebar-foreground/70" />
           <Input 
           type="search" 
           placeholder="Search workspaces, subjects, or documents..." 
-          className="w-full bg-sidebar-accent/50 border-sidebar-border pl-9 text-sidebar-foreground placeholder:text-sidebar-foreground/50 focus-visible:border-blue-300 focus-visible:ring-0 h-7"
+          className="w-full bg-sidebar-accent/50 border-sidebar-border pl-9 text-sidebar-foreground placeholder:text-sidebar-foreground/50 focus-visible:border-blue-300 focus-visible:ring-0 h-7 text-xs sm:text-sm"
           />
       </div>
     </header>
