@@ -84,14 +84,14 @@ export function SignUpForm() {
       oauthText="Sign up"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 sm:gap-6">
           <div className="grid gap-2">
             <Label htmlFor="name">Name</Label>
             <Input
               {...register("name")}
               type="text"
               placeholder="John Doe"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-400"
+              className="p-4 sm:p-5 focus-visible:ring-0 focus-visible:border-blue-400"
             />
             {errors.name && <div className="text-red-400">{errors.name.message}</div>}
           </div>
@@ -101,7 +101,7 @@ export function SignUpForm() {
               {...register("email")}
               type="email"
               placeholder="your@email.com"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-400"
+              className="p-4 sm:p-5 focus-visible:ring-0 focus-visible:border-blue-400"
             />
             {errors.email && <div className="text-red-400">{errors.email.message}</div>}
           </div>
@@ -110,7 +110,7 @@ export function SignUpForm() {
             <Input
               {...register("password")}
               type="password"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-400"
+              className="p-4 sm:p-5 focus-visible:ring-0 focus-visible:border-blue-400"
             />
             {errors.password && <div className="text-red-400">{errors.password.message}</div>}
           </div>
@@ -119,12 +119,12 @@ export function SignUpForm() {
             <Input 
               {...register("confirmPassword")} 
               type="password"
-              className="p-5 focus-visible:ring-0 focus-visible:border-blue-400"
+              className="p-4 sm:p-5 focus-visible:ring-0 focus-visible:border-blue-400"
             />
             {errors.confirmPassword && <div className="text-red-400">{errors.confirmPassword.message}</div>}
           </div>
           <div className="w-full flex items-center justify-center pt-2">
-            <Button type="submit" className="w-full p-6 text-lg bg-[#83a0fd] hover:bg-[#9bb3ff] disabled:bg-[#95a4c9]">
+            <Button type="submit" className="w-full p-4 sm:p-5 md:p-6 text-base sm:text-lg bg-[#83a0fd] hover:bg-[#9bb3ff] disabled:bg-[#95a4c9]">
               {isSubmitting ? "Signing up..." : "Sign Up"}
             </Button>
           </div>
