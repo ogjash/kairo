@@ -43,7 +43,7 @@ export default async function SpaceLayout({
 
       <Header />
       
-      <SidebarInset className="peer-data-[variant=inset]:mt-12 md:peer-data-[variant=inset]:mt-12">
+      <SidebarInset className="mt-12 md:peer-data-[variant=inset]:mt-12">
         <div className="flex-1 overflow-y-auto py-6 sm:py-8 px-4 sm:px-10 md:px-15 lg:px-25 bg-sidebar/70">
           {children}
         </div>
